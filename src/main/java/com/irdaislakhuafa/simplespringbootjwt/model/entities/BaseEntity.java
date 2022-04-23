@@ -1,5 +1,6 @@
 package com.irdaislakhuafa.simplespringbootjwt.model.entities;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -17,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BaseEntity {
+public class BaseEntity implements Serializable {
 
     @Id
     private String id;

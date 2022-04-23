@@ -14,8 +14,12 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class ApiResponse<A> {
     private ApiMessage message;
-    private String error;
-    private A data;
+
+    @Builder.Default
+    private String error = null;
+
+    @Builder.Default
+    private A data = null;
 
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();

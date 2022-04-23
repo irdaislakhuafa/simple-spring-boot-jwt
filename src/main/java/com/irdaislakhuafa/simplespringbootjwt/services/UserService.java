@@ -2,58 +2,95 @@ package com.irdaislakhuafa.simplespringbootjwt.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.irdaislakhuafa.simplespringbootjwt.model.dtos.UserDto;
 import com.irdaislakhuafa.simplespringbootjwt.model.entities.User;
+import com.irdaislakhuafa.simplespringbootjwt.model.repositories.UserRepository;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class UserService implements BaseService<User, UserDto> {
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public Optional<User> save(User entity) {
-        return null;
+        log.info("Saving new user");
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+        Optional<User> savedUser = Optional.of(userRepository.save(entity));
+        log.info("Success saved new user");
+        return savedUser;
     }
 
     @Override
     public Optional<User> update(User entity) {
-        return null;
+        log.info("Updating user");
+        Optional<User> updatedUser = Optional.of(userRepository.save(entity));
+        log.info("Success update user");
+        return updatedUser;
     }
 
     @Override
     public Optional<User> findById(String id) {
-        return null;
+        Optional<User> user = userRepository.findById(id);
+        log.info((user.isPresent())
+                ? String.format("Found user with id: %s", id)
+                : String.format("User with id: %s not found", id));
+        return user;
     }
 
     @Override
     public boolean isExistsById(String id) {
-        return false;
+        boolean isExists = userRepository.existsById(id);
+        log.info("User with id: " + id + ((isExists) ? "" : " doesn't") + " exists");
+        return isExists;
     }
 
     @Override
     public List<User> findAll() {
-        return null;
+        log.info("Get all data user");
+        List<User> users = userRepository.findAll();
+        log.info("Found all data user" + ((users.isEmpty() || users.size() <= 0) ? " but data is empty" : ""));
+        return users;
     }
 
     @Override
     public User mapToEntity(UserDto dto) throws Exception {
-        return null;
+        return User.builder()
+                .email(dto.getEmail())
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .build();
     }
 
     @Override
     public List<User> mapToEntities(List<UserDto> dtos) throws Exception {
-        return null;
+        return dtos.stream().map((dto) -> {
+            try {
+                return this.mapToEntity(dto);
+            } catch (Exception e) {
+                log.info("Error while mapping user dto to entity: " + e.getMessage());
+            }
+            return null;
+        }).collect(Collectors.toList());
     }
 
     @Override
     public boolean deleteById(String id) {
-        return false;
+        boolean status = this.isExistsById(id);
+        userRepository.deleteById(id);
+        log.info(status ? "Success deleted user with id: " + id : "user with id: " + id + " not found");
+        return status;
     }
 
 }

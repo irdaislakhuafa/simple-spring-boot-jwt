@@ -9,6 +9,9 @@ import com.irdaislakhuafa.simplespringbootjwt.model.dtos.UserDto;
 import com.irdaislakhuafa.simplespringbootjwt.model.entities.User;
 import com.irdaislakhuafa.simplespringbootjwt.model.repositories.UserRepository;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class UserService implements BaseService<User, UserDto> {
+public class UserService implements BaseService<User, UserDto>, UserDetailsService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -94,6 +97,14 @@ public class UserService implements BaseService<User, UserDto> {
         userRepository.deleteById(id);
         log.info(status ? "Success deleted user with id: " + id : "user with id: " + id + " not found");
         return status;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    throw new UsernameNotFoundException("User with email: " + email + " not found");
+                });
     }
 
 }

@@ -20,5 +20,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // TODO: configure web security (public/private/authentication URL/URI)
+
+        // start
+        http
+                .csrf().disable()
+
+                .authorizeRequests()
+                .antMatchers("/auth/**").permitAll()
+                .anyRequest().fullyAuthenticated()
+        // end
+        ;
     }
 }

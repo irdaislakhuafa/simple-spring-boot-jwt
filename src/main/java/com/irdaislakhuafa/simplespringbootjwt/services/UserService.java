@@ -1,5 +1,6 @@
 package com.irdaislakhuafa.simplespringbootjwt.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class UserService implements BaseService<User, UserDto> {
         log.info("Saving new user");
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         Optional<User> savedUser = Optional.of(userRepository.save(entity));
-        log.info("Success saved new user");
+        log.info("Success saved new user with id: " + savedUser.get().getId());
         return savedUser;
     }
 
@@ -70,6 +71,8 @@ public class UserService implements BaseService<User, UserDto> {
                 .email(dto.getEmail())
                 .username(dto.getUsername())
                 .password(dto.getPassword())
+                .createdAt(LocalDateTime.now())
+                .modifiedAt(LocalDateTime.now())
                 .build();
     }
 

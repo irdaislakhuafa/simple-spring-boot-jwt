@@ -3,12 +3,14 @@ package com.irdaislakhuafa.simplespringbootjwt.utils.jwt;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import com.irdaislakhuafa.simplespringbootjwt.model.entities.User;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +48,23 @@ public class JwtUtility {
         log.info("Success generating JSON Web Token");
 
         return token;
+    }
+
+    public boolean isTokenValid(String token, User user) {
+        final String userId = this.getParticularClaim(token, Claims::getSubject);
+        return (userId.equals(user.getId()) && !this.isTokenExpired(token));
+    }
+
+    public boolean isTokenExpired(String token) {
+        return this.getParticularClaim(token, Claims::getExpiration).before(TOKEN_CREATED);
+    }
+
+    private Claims getAllClaimsFromToken(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    }
+
+    private <A> A getParticularClaim(String token, Function<Claims, A> claimsResolver) {
+        final Claims claims = this.getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
     }
 }

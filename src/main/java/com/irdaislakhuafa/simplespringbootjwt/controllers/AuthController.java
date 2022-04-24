@@ -38,7 +38,6 @@ public class AuthController {
 
     @PostMapping(value = { "/register" })
     public ResponseEntity<?> register(@RequestBody(required = true) UserDto userDto) {
-        log.info("oioi");
         Optional<User> savedUser = Optional.empty();
         ResponseEntity<?> response = null;
         try {
@@ -49,11 +48,11 @@ public class AuthController {
                     .build());
             log.info("Success register new user");
         } catch (Exception e) {
-            log.error("Error: ", e);
+            log.error("Error: " + e.getCause().getMessage());
             response = ResponseEntity.internalServerError()
                     .body(ApiResponse.builder()
                             .message(ApiMessage.ERROR)
-                            .error(e.getMessage())
+                            .error(e.getCause().getMessage())
                             .build());
             log.info("Failed register new user");
         }

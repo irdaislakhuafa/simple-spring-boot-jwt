@@ -40,11 +40,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String token = null, userId = null;
 
-        if ((!authorization.isBlank()
-                || !authorization.isEmpty()
-                || authorization != null)
-                && authorization.startsWith(JwtFinalVariable.BEARER)) {
-
+        if (authorization != null && authorization.startsWith(JwtFinalVariable.BEARER)) {
             log.info("Success get `Authorization` from header");
 
             log.info("Getting token from header");
@@ -55,10 +51,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             userId = jwtUtility.getParticularClaim(token, Claims::getSubject).trim();
             log.info("Success get user id");
 
-            if ((!userId.isEmpty()
-                    || userId != null
-                    || !userId.isBlank())
-                    && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 log.info("Get user information from userId");
                 Optional<User> user = userService.findById(userId);

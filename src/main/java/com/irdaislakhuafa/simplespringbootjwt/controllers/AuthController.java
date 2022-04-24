@@ -8,6 +8,7 @@ import com.irdaislakhuafa.simplespringbootjwt.model.entities.User;
 import com.irdaislakhuafa.simplespringbootjwt.services.UserService;
 import com.irdaislakhuafa.simplespringbootjwt.utils.api.ApiMessage;
 import com.irdaislakhuafa.simplespringbootjwt.utils.api.ApiResponse;
+import com.irdaislakhuafa.simplespringbootjwt.utils.jwt.JwtUtility;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final JwtUtility jwtUtility;
 
     @PostMapping(value = { "/register" })
     public ResponseEntity<?> register(@RequestBody(required = true) UserDto userDto) {

@@ -72,7 +72,7 @@ public class UserService implements BaseService<User, UserDto>, UserDetailsServi
     public User mapToEntity(UserDto dto) throws Exception {
         return User.builder()
                 .email(dto.getEmail())
-                .username(dto.getUsername())
+                .name(dto.getUsername())
                 .password(dto.getPassword())
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())

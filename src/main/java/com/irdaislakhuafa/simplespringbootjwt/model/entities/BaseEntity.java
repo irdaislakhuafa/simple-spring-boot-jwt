@@ -1,6 +1,5 @@
 package com.irdaislakhuafa.simplespringbootjwt.model.entities;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BaseEntity implements Serializable {
+public class BaseEntity {
 
     protected LocalDateTime createdAt;
 

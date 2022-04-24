@@ -1,5 +1,6 @@
 package com.irdaislakhuafa.simplespringbootjwt.model.entities;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +30,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class User extends BaseEntity implements UserDetails {
+public class User extends BaseEntity implements UserDetails, Serializable {
     @Id
     private String id;
 
@@ -37,7 +38,7 @@ public class User extends BaseEntity implements UserDetails {
     private String email;
 
     @Indexed
-    private String username;
+    private String name;
 
     private String password;
 

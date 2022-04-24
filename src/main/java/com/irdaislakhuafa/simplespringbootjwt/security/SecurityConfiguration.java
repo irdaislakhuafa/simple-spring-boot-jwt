@@ -21,7 +21,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // TODO configure authentication manager
         auth.authenticationProvider(new DaoAuthenticationProvider() {
             {
                 setUserDetailsService(userService);
@@ -39,7 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/auth/**", "/auth/login").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

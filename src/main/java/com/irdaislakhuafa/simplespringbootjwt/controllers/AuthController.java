@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,13 +62,13 @@ public class AuthController {
 
     @PostMapping(value = { "/login", "/", "/authenticate" })
     public ResponseEntity<?> authentication(@RequestBody(required = true) AuthRequest authRequest) {
-        // TODO : add authentication task
         log.info("Preparing authentication");
         AuthResponse authResponse = null;
         ResponseEntity<?> responses = null;
+
         try {
             log.info("Preparing username and password authentication token");
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+            final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                     authRequest.getEmail(),
                     authRequest.getPassword());
             log.info("Username and password authentication token is created");
@@ -77,10 +78,10 @@ public class AuthController {
             log.info("Success authenticated user");
 
             log.info("Getting user information");
-            Optional<User> authUser = userService.findByEmail(authRequest.getEmail());
+            final Optional<User> authUser = userService.findByEmail(authRequest.getEmail());
 
             log.info("Generate token");
-            String token = jwtUtility.generateJwtToken(authUser.get());
+            final String token = jwtUtility.generateJwtToken(authUser.get());
 
             log.info("Preparing auth response");
             authResponse = AuthResponse.builder()
@@ -97,6 +98,15 @@ public class AuthController {
             authResponse = AuthResponse.builder()
                     .message(ApiMessage.ERROR)
                     .error("Username or Email: " + authRequest.getEmail() + " doesn't exists")
+                    .build();
+            responses = new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
+
+        } catch (BadCredentialsException e) {
+            log.error("Error: " + e.getMessage());
+            authResponse = AuthResponse.builder()
+                    .message(ApiMessage.ERROR)
+                    .error("Incorrect username or password")
+                    .token(null)
                     .build();
             responses = new ResponseEntity<>(authResponse, HttpStatus.BAD_REQUEST);
 

@@ -3,6 +3,7 @@ package com.irdaislakhuafa.simplespringbootjwt.controllers;
 import java.util.Optional;
 
 import com.irdaislakhuafa.simplespringbootjwt.model.dtos.UserDto;
+import com.irdaislakhuafa.simplespringbootjwt.model.dtos.requests.AuthRequest;
 import com.irdaislakhuafa.simplespringbootjwt.model.entities.User;
 import com.irdaislakhuafa.simplespringbootjwt.services.UserService;
 import com.irdaislakhuafa.simplespringbootjwt.utils.api.ApiMessage;
@@ -26,6 +27,7 @@ public class AuthController {
 
     @PostMapping(value = { "/register" })
     public ResponseEntity<?> register(@RequestBody(required = true) UserDto userDto) {
+        log.info("oioi");
         Optional<User> savedUser = Optional.empty();
         ResponseEntity<?> response = null;
         try {
@@ -45,5 +47,11 @@ public class AuthController {
             log.info("Failed register new user");
         }
         return response;
+    }
+
+    @PostMapping(value = { "/login", "/" })
+    public ResponseEntity<?> login(@RequestBody(required = true) AuthRequest authRequest) {
+        // TODO : add authentication task
+        return ResponseEntity.ok().body(authRequest);
     }
 }

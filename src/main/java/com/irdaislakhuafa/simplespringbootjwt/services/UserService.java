@@ -101,10 +101,14 @@ public class UserService implements BaseService<User, UserDto>, UserDetailsServi
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> {
                     throw new UsernameNotFoundException("User with email: " + email + " not found");
                 });
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmailIgnoreCase(email);
     }
 
 }

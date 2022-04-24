@@ -2,7 +2,9 @@ package com.irdaislakhuafa.simplespringbootjwt.security;
 
 import com.irdaislakhuafa.simplespringbootjwt.services.UserService;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -38,13 +40,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
 
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/auth/login").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
 
-                .and()
-                .httpBasic()
         // end
         ;
     }
 
+    @Bean(name = { "authenticationManager" })
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
 }

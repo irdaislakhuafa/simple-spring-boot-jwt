@@ -19,5 +19,8 @@ public class AuthResponse {
     private ApiMessage message = ApiMessage.SUCCESS;
 
     @Builder.Default
-    private String token = "";
+    private String error = null;
+
+    @Builder.Default
+    private String token = null;
 }

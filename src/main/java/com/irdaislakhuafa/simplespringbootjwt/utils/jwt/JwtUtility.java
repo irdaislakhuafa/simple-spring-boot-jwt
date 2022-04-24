@@ -59,11 +59,11 @@ public class JwtUtility {
         return this.getParticularClaim(token, Claims::getExpiration).before(TOKEN_CREATED);
     }
 
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
-    private <A> A getParticularClaim(String token, Function<Claims, A> claimsResolver) {
+    public <A> A getParticularClaim(String token, Function<Claims, A> claimsResolver) {
         final Claims claims = this.getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
